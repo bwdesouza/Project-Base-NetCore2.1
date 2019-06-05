@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package xmlns="http://www.idpf.org/2007/opf" version="3.0" xml:lang="en" unique-identifier="pub-id" prefix="cc: http://creativecommons.org/ns#">
+  <metadata xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <dc:title id="title"></dc:title>
+    <meta refines="#title" property="title-type">
+    <dc:creator id="creator"></dc:creator>
+    <meta refines="#creator" property="file-as">
+    <meta refines="#creator" property="role" scheme="marc:relators">
+    <dc:identifier id="pub-id"></dc:identifier>
+    <dc:language></dc:language>
+    <meta property="dcterms:modified">
+    <dc:publisher></dc:publisher>
+    <dc:contributor id="contrib1"></dc:contributor>
+    <meta refines="#contrib1" property="role" scheme="marc:relators">
+    <dc:rights></dc:rights>        
+    <link rel="cc:license" href="{{LICENCE_URL}}">
+    <meta property="cc:attributionURL">
+  </metadata>
+  <manifest>
+  
+  </manifest>
+  <spine>
+    
+  </spine>
+</package>
