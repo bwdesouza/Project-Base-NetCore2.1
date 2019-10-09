@@ -22,6 +22,11 @@ namespace NetCore.Domain.Services
             return await _repository.RegisterUser(usuario);
         }
 
+        public async Task<bool> EditarUsuario(Usuario usuario)
+        {
+            return await _repository.EditarUsuario(usuario);
+        }
+
         public async Task<Usuario> BuscarUsuario(string email)
         {
             return await _repository.BuscarUsuario(email);
@@ -30,6 +35,11 @@ namespace NetCore.Domain.Services
         public async Task<List<Usuario>> ListarUsuarios()
         {
             return await _repository.ListarUsuarios();
+        }
+
+        public async Task<bool> DeletarUsuario(Guid id)
+        {
+            return await _repository.DeletarUsuario(id);
         }
     }
 }

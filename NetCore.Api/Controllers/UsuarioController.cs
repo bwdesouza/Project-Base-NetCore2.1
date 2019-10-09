@@ -22,8 +22,10 @@ namespace NetCore.Api.Controllers
     {
         private const string USUARIO_OU_SENHA_ERRADO = "Usuário ou senha está incorreto!";
         private const string MESSAGE_ERRO_REGISTRAR_USUARIO = "Falha ao registrar o novo usuário. Por favor, tente novamente ou contate a equipe técnica!";
+        private const string MESSAGE_ERRO_EDITAR_USUARIO = "Falha ao editar usuário. Por favor, tente novamente ou contate a equipe técnica!";
         private const string MESSAGE_ERRO_LOGAR_USUARIO = "Falha ao realizar o login. Por favor, tente novamente ou contate a equipe técnica!";
         private const string MESSAGE_ERRO_LISTAR_USUARIO = "Falha ao fazer a pesquisa dos usuários. Por favor, tente novamente ou contate a equipe técnica!";
+        private const string MESSAGE_ERRO_VALIDAR_DELECAO = "Id do usuário está inválido. Por favor, tente novamente ou contate a equipe técnica!";
 
         #region PROPERTIES
         private IUsuarioAppService _usuarioService { get; set; }
@@ -68,16 +70,69 @@ namespace NetCore.Api.Controllers
         }
 
         /// <summary>
+        /// Editar um Usuário
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("v1/usuario/editarUsuario")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EditarUsuario([FromBody] UsuarioPessoaCommand command)
+        {
+            try
+            {
+                var resultRequired = new UsuarioPessoaCommandContract(command);
+                if (resultRequired.Invalid)
+                {
+                    return await Response(null, resultRequired.Notifications);
+                }
+                else
+                {
+                    return await Response(await _usuarioService.EditarUsuario(command), null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return await Response(null, new List<Notification>() { new Notification(MESSAGE_ERRO_EDITAR_USUARIO, ex.Message) });
+            }
+        }
+
+        /// <summary>
         /// Listar todos os Usuários
         /// </summary>
         /// <returns></returns>
         [HttpGet]
         [Route("v1/usuario/listarUsuarios")]
-        public async Task<IActionResult> GetListarUsuarios()
+        public async Task<IActionResult> ListarUsuarios()
         {
             try
             {
                 return await Response(await _usuarioService.ListarUsuarios(), null);
+            }
+            catch (Exception ex)
+            {
+                return await Response(null, new List<Notification>() { new Notification(MESSAGE_ERRO_LISTAR_USUARIO, ex.Message) });
+            }
+        }
+
+        /// <summary>
+        /// Deletar Usuário
+        /// </summary>
+        /// <returns></returns>
+        [HttpDelete]
+        [Route("v1/usuario/deletarUsuario/{id}")]
+        public async Task<IActionResult> DeletarUsuario(string id)
+        {
+            try
+            {
+                Guid guidId;
+                if (Guid.TryParse(id, out guidId))
+                {
+                    return await Response(await _usuarioService.ListarUsuarios(), null);
+                }
+                else
+                {
+                    return await Response(null, new List<Notification>() { new Notification(MESSAGE_ERRO_VALIDAR_DELECAO, null) });
+                }
             }
             catch (Exception ex)
             {

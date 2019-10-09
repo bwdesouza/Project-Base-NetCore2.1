@@ -11,7 +11,9 @@ namespace NetCore.AppServices.Interfaces
     public interface IUsuarioAppService
     {
         Task<bool> RegisterUser(UsuarioPessoaCommand command);
+        Task<bool> EditarUsuario(UsuarioPessoaCommand command);
         Task<List<UsuarioViewModel>> ListarUsuarios();
         Task<UsuarioViewModel> LoginUsuario(string email, string senha);
+        Task<bool> DeletarUsuario(Guid id);
     }
 }

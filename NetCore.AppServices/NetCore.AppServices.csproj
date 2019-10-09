@@ -32,4 +32,9 @@
     <ProjectReference Include="..\NetCore.Domain\NetCore.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Commands\Usuario\UsuarioPessoaEdicaoCommandContract.cs" />
+    <Compile Remove="Commands\Usuario\UsuarioPessoaEdicaoCommand.cs" />
+  </ItemGroup>
+
 </Project>

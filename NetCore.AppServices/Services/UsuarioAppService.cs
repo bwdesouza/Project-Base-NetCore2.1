@@ -53,6 +53,39 @@ namespace NetCore.AppServices.Services
             return true;
         }
 
+        public async Task<bool> EditarUsuario(UsuarioPessoaCommand command)
+        {
+            var usuario = await _usuarioService.BuscarUsuario(command.Email);
+
+            if (usuario == null)
+            {
+                throw new Exception("Usuário não encontrado. Por favor, informe outro Email ou contate a equipe tecnica!");
+            }
+
+            var usuarioEditado = new Usuario()
+            {
+                Id = usuario.Id,
+                UserName = command.Nome,
+                Email = usuario.Email,
+                PasswordHash = usuario.PasswordHash,
+                PasswordSalt = usuario.PasswordSalt
+            };
+
+            byte[] passwordHash, passwordSalt;
+            CreatePasswordHash(command.Senha, out passwordHash, out passwordSalt);
+
+            if (usuario.PasswordHash != Convert.ToBase64String(passwordHash) &&
+                usuario.PasswordSalt != Convert.ToBase64String(passwordSalt))
+            {
+                usuarioEditado.PasswordHash = Convert.ToBase64String(passwordHash);
+                usuarioEditado.PasswordSalt = Convert.ToBase64String(passwordSalt);
+            }
+
+            var model = await _usuarioService.EditarUsuario(usuarioEditado);
+
+            return model;
+        }
+
         public async Task<List<UsuarioViewModel>> ListarUsuarios()
         {
             return _Mapper.Map<List<Usuario>, List<UsuarioViewModel>>(await _usuarioService.ListarUsuarios());
@@ -81,6 +114,13 @@ namespace NetCore.AppServices.Services
             var model = _Mapper.Map<Usuario, UsuarioViewModel>(usuario);
 
             model.Token = token;
+
+            return model;
+        }
+
+        public async Task<bool> DeletarUsuario(Guid id)
+        {
+            var model = await _usuarioService.DeletarUsuario(id);
 
             return model;
         }

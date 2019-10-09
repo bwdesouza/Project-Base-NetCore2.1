@@ -22,15 +22,18 @@ namespace NetCore.Infra.Repositories
                                 WHERE [Id] = @Id";
         #endregion
 
+        #region DELETE
+        private const string DELETAR_USUARIO =
+            @"DELETE FROM [dbo].[ApplicationUser]
+                                WHERE Id = @Id ";
+        #endregion
+
         #region UPDATE
         private const string ATUALIZAR_USUARIO =
                             @"UPDATE [dbo].[ApplicationUser]
                                        SET [UserName] = @UserName
                                           ,[PasswordHash] = @PasswordHash
                                           ,[PasswordSalt] = @PasswordSalt
-                                          ,[Email] = @Email
-                                          ,[EmailConfirmed] = @EmailConfirmed
-                                          ,[IsEnabled] = @IsEnabled
                                 WHERE Id = @Id ";
         #endregion
 

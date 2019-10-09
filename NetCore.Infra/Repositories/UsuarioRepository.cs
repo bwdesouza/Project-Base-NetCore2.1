@@ -80,6 +80,27 @@ namespace NetCore.Infra.Repositories
             return usuarios;
         }
 
+        public async Task<bool> DeletarUsuario(Guid id)
+        {
+            using (var conn = new ConnectionFactory().GetOpenBDConnection())
+            {
+                IDbTransaction trans = conn.BeginTransaction();
+                try
+                {
+                    conn.Execute(DELETAR_USUARIO, new { @Id = id }, trans);
+
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    throw new Exception(ex.Message);
+                }
+            }
+
+            return true;
+        }
+
         public async Task<Usuario> RegisterUser(Usuario usuario)
         {
             Usuario user = new Usuario();
@@ -102,5 +123,27 @@ namespace NetCore.Infra.Repositories
 
             return user;
         }
+        
+        public async Task<bool> EditarUsuario(Usuario usuario)
+        {
+            using (var conn = new ConnectionFactory().GetOpenBDConnection())
+            {
+                IDbTransaction trans = conn.BeginTransaction();
+                try
+                {
+                    conn.Execute(ATUALIZAR_USUARIO, new { usuario.UserName, usuario.PasswordHash, usuario.PasswordSalt, usuario.Id }, trans);
+
+                    trans.Commit();
+                }
+                catch (Exception ex)
+                {
+                    trans.Rollback();
+                    throw new Exception(ex.Message);
+                }
+            }
+
+            return true;
+        }
+
     }
 }
