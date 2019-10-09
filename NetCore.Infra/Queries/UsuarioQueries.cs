@@ -56,5 +56,29 @@ namespace NetCore.Infra.Repositories
                                                ,@EmailConfirmed
                                                ,@IsEnabled)";
         #endregion
+
+        #region CREATE
+        private const string CREATE_DB =
+            @"USE [ProjetoBase]
+                    GO
+
+                    /****** Object:  Table [dbo].[ApplicationUser] ******/
+                    SET ANSI_NULLS ON
+                    GO
+
+                    SET QUOTED_IDENTIFIER ON
+                    GO
+
+                    CREATE TABLE [dbo].[ApplicationUser](
+	                    [Id] [uniqueidentifier] NOT NULL,
+	                    [UserName] [varchar](100) NOT NULL,
+	                    [Email] [varchar](100) NOT NULL,
+	                    [EmailConfirmed] [bit] NOT NULL,
+	                    [PasswordHash] [varchar](250) NOT NULL,
+	                    [PasswordSalt] [varchar](250) NOT NULL,
+	                    [IsEnabled] [bit] NOT NULL
+                    ) ON [PRIMARY]
+                    GO";
+        #endregion
     }
 }

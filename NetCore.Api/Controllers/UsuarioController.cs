@@ -42,13 +42,40 @@ namespace NetCore.Api.Controllers
         #region PUBLIC METHODS
 
         /// <summary>
-        /// Registrar um Usuário
+        /// Realizar Login na aplicação
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        [Route("v1/usuario/registrarUsuario")]
+        [Route("v1/usuario/login")]
         [AllowAnonymous]
-        public async Task<IActionResult> RegistrarUsuario([FromBody] UsuarioPessoaCommand command)
+        public async Task<IActionResult> Login([FromBody] CredencialCommand command)
+        {
+            try
+            {
+                var resultRequired = new CredencialCommandContract(command);
+                if (resultRequired.Invalid)
+                {
+                    return await Response(null, resultRequired.Notifications);
+                }
+                else
+                {
+                    return await Response(await _usuarioService.LoginUsuario(command.Email, command.Senha), null);
+                }
+            }
+            catch (Exception ex)
+            {
+                return await Response(null, new List<Notification>() { new Notification(MESSAGE_ERRO_LOGAR_USUARIO, ex.Message) });
+            }
+        }
+
+        /// <summary>
+        /// Cadastrar um Usuário
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("v1/usuario/cadastrarNovoUsuario")]
+        [AllowAnonymous]
+        public async Task<IActionResult> CadastrarNovoUsuario([FromBody] UsuarioPessoaCommand command)
         {
             try
             {
@@ -101,8 +128,8 @@ namespace NetCore.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        [Route("v1/usuario/listarUsuarios")]
-        public async Task<IActionResult> ListarUsuarios()
+        [Route("v1/usuario/listarTodosUsuarios")]
+        public async Task<IActionResult> ListarTodosUsuarios()
         {
             try
             {
@@ -127,7 +154,7 @@ namespace NetCore.Api.Controllers
                 Guid guidId;
                 if (Guid.TryParse(id, out guidId))
                 {
-                    return await Response(await _usuarioService.ListarUsuarios(), null);
+                    return await Response(await _usuarioService.DeletarUsuario(guidId), null);
                 }
                 else
                 {
@@ -137,33 +164,6 @@ namespace NetCore.Api.Controllers
             catch (Exception ex)
             {
                 return await Response(null, new List<Notification>() { new Notification(MESSAGE_ERRO_LISTAR_USUARIO, ex.Message) });
-            }
-        }
-
-        /// <summary>
-        /// Realizar Login na aplicação
-        /// </summary>
-        /// <returns></returns>
-        [HttpPost]
-        [Route("v1/usuario/login")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] CredencialCommand command)
-        {
-            try
-            {
-                var resultRequired = new CredencialCommandContract(command);
-                if (resultRequired.Invalid)
-                {
-                    return await Response(null, resultRequired.Notifications);
-                }
-                else
-                {
-                    return await Response(await _usuarioService.LoginUsuario(command.Email, command.Senha), null);
-                }
-            }
-            catch (Exception ex)
-            {
-                return await Response(null, new List<Notification>() { new Notification(MESSAGE_ERRO_LOGAR_USUARIO, ex.Message) });
             }
         }
         #endregion
